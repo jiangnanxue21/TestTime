@@ -37,6 +37,8 @@ public class MainActivity extends Activity {
     private final Intent intent = new Intent(Intent.ACTION_MAIN);
     private final ComponentName cn = new ComponentName(packName,mainClass);
     private android.os.Process localProcess ;
+    public static File index = new File(Environment.getExternalStorageDirectory(),"/.multisync/index");
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -44,29 +46,136 @@ public class MainActivity extends Activity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                intent.setComponent(cn);
+            /*
+        下载的步骤:
+        1.清除index
+        2.启动程序
+        3.等待10分钟,如果程序仍然运行,则查询程序的pid并且关闭程序
+        4.进行循环
+        5.重复步骤1~3
+            */
+
+                /*
+                1.把原来的index删除
+                 */
+                if (index.exists())
+                    index.delete();
+                /*
+                    2
+                 */
+                startActivity(intent);
+
+                /*
+                    3.
+                 */
                 try {
-                    //下载删除
+                    TimeUnit.SECONDS.sleep(600);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                querySyncAppInfo();
+                if (SyncPid!=0)
+                    android.os.Process.killProcess(SyncPid);//如果同步失败,在10分钟之后关闭程序
+
+                /*
+                    4.
+                 */
+                while (i < 100){
+                    if (index.exists())
+                        index.delete();
+                    startActivity(intent);
+                    try {
+                        TimeUnit.SECONDS.sleep(600);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    querySyncAppInfo();
+                    if (SyncPid!=0)
+                        android.os.Process.killProcess(SyncPid);//如果同步失败,在10分钟之后关闭程序
+                    i++;
+                }
+
+                /*
+                上传的步骤:
+                1.清除index
+                2.将上传的文件删除并且产生新的文件
+                3.启动程序
+                4.等待十分钟,并且查询程序的pid
+                5.进行循环
+                6.重复1~4
+                 */
+
+                 /*
+                1.把原来的index删除
+                 */
+                if (index.exists())
+                    index.delete();
+
+                 /*
+                    2.下载删除改行代码
+                    将原来要上传的文件删除,并且随机产生新的文件.避免云盘校验MD5值
+                     */
+                try {
                     createFile();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                intent.addCategory(Intent.CATEGORY_LAUNCHER);
-                intent.setComponent(cn);
+
+
+                  /*
+                    3
+                 */
                 startActivity(intent);
-                while (i < 1000)
+                /*
+                    4
+                 */
+                try {
+                    TimeUnit.SECONDS.sleep(600);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                querySyncAppInfo();
+                if (SyncPid!=0)
+                    android.os.Process.killProcess(SyncPid);//如果同步失败,在10分钟之后关闭程序
+
+                /*
+                    5
+                 */
+                while (i < 100) {
                     try {
-                        querySyncAppInfo();
-                        TimeUnit.SECONDS.sleep(600);
-                        android.os.Process.killProcess(SyncPid);
-                        //下载删除该行
+                        if (index.exists())
+                            index.delete();
                         createFile();
                         startActivity(intent);
+                        TimeUnit.SECONDS.sleep(600);
+                        querySyncAppInfo();
+                        if (SyncPid!=0)
+                            android.os.Process.killProcess(SyncPid);//如果同步失败,在10分钟之后关闭程序
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                i++;
+                    i++;
+                }
+
+                while (i < 100){
+                    if (index.exists())
+                            index.delete();
+                    try {
+                        TimeUnit.SECONDS.sleep(25);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    querySyncAppInfo();
+                        if (SyncPid!=0)
+                            android.os.Process.killProcess(SyncPid);//如果同步失败,在10分钟之后关闭程序
+                    startActivity(intent);
+                    i++;
+                }
             }
         });
 
@@ -93,6 +202,9 @@ public class MainActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+    /*
+    查询sync的进程pid
+     */
 
     private void querySyncAppInfo() {
         pm = this.getPackageManager();
@@ -119,7 +231,6 @@ public class MainActivity extends Activity {
             for (int i = 0; i < pkgNameList.length; i++) {
                 String pkgName = pkgNameList[i];
                 if (packName.equals(pkgName)){
-                    System.out.println("packageName " + pkgName + " at index " + i + " in process " + pid);
                     SyncPid = pid ;
                 }
 
@@ -132,7 +243,6 @@ public class MainActivity extends Activity {
      */
     private void createFile() throws IOException {
         final String syncPath = Environment.getExternalStorageDirectory()+"/sync";
-        System.out.println(Environment.getExternalStorageDirectory());
         final String syncFile1 = "tmp.1M";
         final String syncFile10 = "tmp.10M";
         final String syncFile20 = "tmp.20M";
@@ -162,7 +272,6 @@ public class MainActivity extends Activity {
     }
 
     private void newFile(String fileName ,int size) throws IOException {
-        System.out.println(fileName);
         File file = new File(fileName) ;
         file.delete();
         file.createNewFile();
