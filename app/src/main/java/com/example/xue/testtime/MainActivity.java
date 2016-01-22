@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends Activity {
 
@@ -61,42 +60,42 @@ public class MainActivity extends Activity {
                 /*
                 1.把原来的index删除
                  */
-                if (index.exists())
-                    index.delete();
-                /*
-                    2
-                 */
-                startActivity(intent);
-
-                /*
-                    3.
-                 */
-                try {
-                    TimeUnit.SECONDS.sleep(600);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                querySyncAppInfo();
-                if (SyncPid!=0)
-                    android.os.Process.killProcess(SyncPid);//如果同步失败,在10分钟之后关闭程序
-
-                /*
-                    4.
-                 */
-                while (i < 100){
-                    if (index.exists())
-                        index.delete();
-                    startActivity(intent);
-                    try {
-                        TimeUnit.SECONDS.sleep(600);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    querySyncAppInfo();
-                    if (SyncPid!=0)
-                        android.os.Process.killProcess(SyncPid);//如果同步失败,在10分钟之后关闭程序
-                    i++;
-                }
+//                if (index.exists())
+//                    index.delete();
+//                /*
+//                    2
+//                 */
+//                startActivity(intent);
+//
+//                /*
+//                    3.
+//                 */
+//                try {
+//                    TimeUnit.MINUTES.sleep(10);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                querySyncAppInfo();
+//                if (SyncPid!=0)
+//                    android.os.Process.killProcess(SyncPid);//如果同步失败,在10分钟之后关闭程序
+//
+//                /*
+//                    4.
+//                 */
+//                while (i < 100){
+//                    if (index.exists())
+//                        index.delete();
+//                    startActivity(intent);
+//                    try {
+//                        TimeUnit.MINUTES.sleep(10);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                    querySyncAppInfo();
+//                    if (SyncPid!=0)
+//                        android.os.Process.killProcess(SyncPid);//如果同步失败,在10分钟之后关闭程序
+//                    i++;
+//                }
 
                 /*
                 上传的步骤:
@@ -111,71 +110,57 @@ public class MainActivity extends Activity {
                  /*
                 1.把原来的index删除
                  */
-                if (index.exists())
-                    index.delete();
-
-                 /*
-                    2.下载删除改行代码
-                    将原来要上传的文件删除,并且随机产生新的文件.避免云盘校验MD5值
-                     */
-                try {
-                    createFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-                  /*
-                    3
-                 */
-                startActivity(intent);
-                /*
-                    4
-                 */
-                try {
-                    TimeUnit.SECONDS.sleep(600);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                querySyncAppInfo();
-                if (SyncPid!=0)
-                    android.os.Process.killProcess(SyncPid);//如果同步失败,在10分钟之后关闭程序
-
-                /*
-                    5
-                 */
-                while (i < 100) {
-                    try {
-                        if (index.exists())
-                            index.delete();
-                        createFile();
-                        startActivity(intent);
-                        TimeUnit.SECONDS.sleep(600);
-                        querySyncAppInfo();
-                        if (SyncPid!=0)
-                            android.os.Process.killProcess(SyncPid);//如果同步失败,在10分钟之后关闭程序
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    i++;
-                }
-
-                while (i < 100){
-                    if (index.exists())
-                            index.delete();
-                    try {
-                        TimeUnit.SECONDS.sleep(25);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    querySyncAppInfo();
-                        if (SyncPid!=0)
-                            android.os.Process.killProcess(SyncPid);//如果同步失败,在10分钟之后关闭程序
-                    startActivity(intent);
-                    i++;
-                }
+//                if (index.exists())
+//                    index.delete();
+//
+//                 /*
+//                    2.下载删除改行代码
+//                    将原来要上传的文件删除,并且随机产生新的文件.避免云盘校验MD5值
+//                     */
+//                try {
+//                    createFile();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//
+//
+//                  /*
+//                    3
+//                 */
+//                startActivity(intent);
+//                /*
+//                    4
+//                 */
+//                try {
+//                    TimeUnit.MINUTES.sleep(10);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                querySyncAppInfo();
+//                if (SyncPid!=0)
+//                    android.os.Process.killProcess(SyncPid);//如果同步失败,在10分钟之后关闭程序
+//
+//                /*
+//                    5
+//                 */
+//                while (i < 100) {
+//                    try {
+//                        if (index.exists())
+//                            index.delete();
+//                        createFile();
+//                        startActivity(intent);
+//                        TimeUnit.MINUTES.sleep(10);
+//                        querySyncAppInfo();
+//                        if (SyncPid!=0)
+//                            android.os.Process.killProcess(SyncPid);//如果同步失败,在10分钟之后关闭程序
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                    i++;
+//                }
+//
             }
         });
 
